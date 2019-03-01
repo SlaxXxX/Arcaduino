@@ -21,7 +21,6 @@ namespace Arcaduino
 
         InputSimulator inSim = new InputSimulator();
         SerialPort arduPort = new SerialPort();
-        Dictionary<int, KeyCombination> keyMap = new Dictionary<int, KeyCombination>();
 
         Program()
         {
@@ -45,27 +44,26 @@ namespace Arcaduino
                 }
                 else
                 {
-                    KeyCombination keyComb = null;
-                    if (keyMap.TryGetValue(id, out keyComb))
-                    {
-                        if (!keyComb.isCombination)
-                        {
-                            if (action == KEY_DOWN)
-                            {
-                                foreach (VirtualKeyCode vk in keyComb.keys)
-                                    inSim.Keyboard.KeyDown(vk);
-                            }
-                            if (action == KEY_UP)
-                            {
-                                foreach (VirtualKeyCode vk in keyComb.keys)
-                                    inSim.Keyboard.KeyUp(vk);
-                            }
-                        }
-                        else if (action == KEY_DOWN)
-                        {
-                            inSim.Keyboard.ModifiedKeyStroke(keyComb.combination, keyComb.keys);
-                        }
-                    }
+                    //if (keyMap.TryGetValue(id, out keyComb))
+                    //{
+                    //    if (!keyComb.isCombination)
+                    //    {
+                    //        if (action == KEY_DOWN)
+                    //        {
+                    //            foreach (VirtualKeyCode vk in keyComb.keys)
+                    //                inSim.Keyboard.KeyDown(vk);
+                    //        }
+                    //        if (action == KEY_UP)
+                    //        {
+                    //            foreach (VirtualKeyCode vk in keyComb.keys)
+                    //                inSim.Keyboard.KeyUp(vk);
+                    //        }
+                    //    }
+                    //    else if (action == KEY_DOWN)
+                    //    {
+                    //        inSim.Keyboard.ModifiedKeyStroke(keyComb.combination, keyComb.keys);
+                    //    }
+                    //}
                 }
             }
         }
@@ -81,35 +79,36 @@ namespace Arcaduino
 
         void readFile()
         {
-            string keys = @"(?:\w+\s*\+\s*)*\w+";
-            string combination = keys + @"\s+,\s+" + keys;
-            string axis = combination + @"\s+\|\s+" + combination;
-            string pattern = @"^(A?\d+)\s+-\s+(.*)$";
-            string keyTerm = "^(?:(" + keys + ")|(" + combination + ")|(" + axis + "))$";
-            string[] lines = System.IO.File.ReadAllLines(@".\mapping.txt");
-            foreach (string line in lines)
-            {
-                Console.WriteLine("Line: " + line);
-                Match match = Regex.Match(line, pattern, RegexOptions.IgnoreCase);
-                if (match.Success)
-                {
-                    int id;
-                    if (match.Groups[1].Value.StartsWith("A"))
-                    {
-                        id = 1000 + Convert.ToInt32(match.Groups[1].Value.Substring(1));
-                    }
-                    else
-                    {
-                        id = Convert.ToInt32(match.Groups[1].Value);
-                    }
-                    Match matchTerm = Regex.Match(match.Groups[2].Value, keyTerm, RegexOptions.IgnoreCase);
-                    if (match.Success)
-                    {
-                        foreach (Group group in matchTerm.Groups)
-                        {
-                            Console.WriteLine(group.Value);
-                        }
-                    }
+            new FileCompiler().readFile(@".\mapping.txt");
+            //string keys = @"(?:\w+\s*\+\s*)*\w+";
+            //string combination = keys + @"\s+,\s+" + keys;
+            //string axis = combination + @"\s+\|\s+" + combination;
+            //string pattern = @"^(A?\d+)\s+-\s+(.*)$";
+            //string keyTerm = "^(?:(" + keys + ")|(" + combination + ")|(" + axis + "))$";
+            //string[] lines = System.IO.File.ReadAllLines(@".\mapping.txt");
+            //foreach (string line in lines)
+            //{
+            //    Console.WriteLine("Line: " + line);
+            //    Match match = Regex.Match(line, pattern, RegexOptions.IgnoreCase);
+            //    if (match.Success)
+            //    {
+            //        int id;
+            //        if (match.Groups[1].Value.StartsWith("A"))
+            //        {
+            //            id = 1000 + Convert.ToInt32(match.Groups[1].Value.Substring(1));
+            //        }
+            //        else
+            //        {
+            //            id = Convert.ToInt32(match.Groups[1].Value);
+            //        }
+            //        Match matchTerm = Regex.Match(match.Groups[2].Value, keyTerm, RegexOptions.IgnoreCase);
+            //        if (match.Success)
+            //        {
+            //            foreach (Group group in matchTerm.Groups)
+            //            {
+            //                Console.WriteLine(group.Value);
+            //            }
+            //        }
 
                     //List<VirtualKeyCode> keyList = new List<VirtualKeyCode>();
                     //List<VirtualKeyCode> combinationList = null;
@@ -144,8 +143,8 @@ namespace Arcaduino
                     //foreach (VirtualKeyCode vk in keyList)
                     //    Console.Write(vk.ToString() + " ");
                     //Console.WriteLine();
-                }
-            }
+            //    }
+            //}
         }
 
 
@@ -160,20 +159,6 @@ namespace Arcaduino
         static void Main(string[] args)
         {
             new Program();
-        }
-    }
-
-    class KeyCombination
-    {
-        public List<VirtualKeyCode> keys;
-        public List<VirtualKeyCode> combination;
-        public bool isCombination;
-
-        public KeyCombination(List<VirtualKeyCode> pKeys, List<VirtualKeyCode> pComb, bool pIsComb)
-        {
-            keys = pKeys;
-            combination = pComb;
-            isCombination = pIsComb;
         }
     }
 }

@@ -1,10 +1,1 @@
-2	-	VK_W
-3	-	VK_S
-4	-	VK_A
-5	-	VK_D
-6	-	SHIFT + VK_W
-11	-	MENU , F10
-53	-	SPACE
-
-A0	-	VK_D | VK_A
-A1	-	VK_W | VK_S
+A0	-	SHIFT , A + D | CONTROL , A + D
