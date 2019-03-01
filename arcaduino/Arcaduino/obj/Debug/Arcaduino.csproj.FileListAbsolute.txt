@@ -1,0 +1,10 @@
+C:\Users\SlaxX\Desktop\Dev\Arcaduino\arcaduino\Arcaduino\bin\Debug\Arcaduino.exe.config
+C:\Users\SlaxX\Desktop\Dev\Arcaduino\arcaduino\Arcaduino\bin\Debug\Arcaduino.exe
+C:\Users\SlaxX\Desktop\Dev\Arcaduino\arcaduino\Arcaduino\bin\Debug\Arcaduino.pdb
+C:\Users\SlaxX\Desktop\Dev\Arcaduino\arcaduino\Arcaduino\obj\Debug\Arcaduino.csprojAssemblyReference.cache
+C:\Users\SlaxX\Desktop\Dev\Arcaduino\arcaduino\Arcaduino\obj\Debug\Arcaduino.csproj.CoreCompileInputs.cache
+C:\Users\SlaxX\Desktop\Dev\Arcaduino\arcaduino\Arcaduino\obj\Debug\Arcaduino.exe
+C:\Users\SlaxX\Desktop\Dev\Arcaduino\arcaduino\Arcaduino\obj\Debug\Arcaduino.pdb
+C:\Users\SlaxX\Desktop\Dev\Arcaduino\Arcaduino\Arcaduino\bin\Debug\WindowsInput.dll
+C:\Users\SlaxX\Desktop\Dev\Arcaduino\Arcaduino\Arcaduino\bin\Debug\WindowsInput.xml
+C:\Users\SlaxX\Desktop\Dev\Arcaduino\Arcaduino\Arcaduino\obj\Debug\Arcaduino.csproj.CopyComplete

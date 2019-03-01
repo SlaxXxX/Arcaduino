@@ -1,0 +1,12 @@
+24862486 24862486 24862486 24862486 24862486 24862486
+
+prefix:
+00 button up
+01 button down
+10 all axis
+
+body:
+xxxxxx 64 buttons
+
+10yyyyyy xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx 4 axis - 256 steps each. 6 bit (y) placeholder.
+
