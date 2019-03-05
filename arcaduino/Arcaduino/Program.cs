@@ -12,15 +12,13 @@ namespace Arcaduino
 {
     class Program
     {
-        const int KEY_DOWN = 0;
-        const int KEY_UP = 1;
-        const int AXIS = 2;
-        const int AXIS_COUNT = 4;
-        const int AXIS_ACTIVE = 16000;
-        const int AXIS_DEADZONE = 1000;
+        const int ID_KEY_DOWN = 0;
+        const int ID_KEY_UP = 1;
+        const int ID_AXIS = 2;
 
         InputSimulator inSim = new InputSimulator();
         SerialPort arduPort = new SerialPort();
+        Dictionary<string, KeyExecutor> keyMap = new Dictionary<string, KeyExecutor>();
 
         Program()
         {
@@ -36,118 +34,71 @@ namespace Arcaduino
                 int button = arduPort.ReadByte();
                 int action = (button & 0b11000000) >> 6;
                 int id = button & 0b00111111;
-                Console.WriteLine(action + " ,id: " + id);
 
-                if (action == AXIS)
+                if (action == ID_AXIS)
                 {
                     readAxis(id);
                 }
                 else
                 {
-                    //if (keyMap.TryGetValue(id, out keyComb))
-                    //{
-                    //    if (!keyComb.isCombination)
-                    //    {
-                    //        if (action == KEY_DOWN)
-                    //        {
-                    //            foreach (VirtualKeyCode vk in keyComb.keys)
-                    //                inSim.Keyboard.KeyDown(vk);
-                    //        }
-                    //        if (action == KEY_UP)
-                    //        {
-                    //            foreach (VirtualKeyCode vk in keyComb.keys)
-                    //                inSim.Keyboard.KeyUp(vk);
-                    //        }
-                    //    }
-                    //    else if (action == KEY_DOWN)
-                    //    {
-                    //        inSim.Keyboard.ModifiedKeyStroke(keyComb.combination, keyComb.keys);
-                    //    }
-                    //}
+                    Console.WriteLine(action + " ,id: " + id);
+                    KeyExecutor executor;
+                    if (action == ID_KEY_DOWN)
+                        if (keyMap.TryGetValue("" + id, out executor))
+                            executor.keysDown(inSim);
+                    if (action == ID_KEY_UP)
+                        if (keyMap.TryGetValue("" + id, out executor))
+                            executor.keysUp(inSim);
                 }
             }
         }
+
+        const int AXIS_COUNT = 2;
+        const int AXIS_MAX = 225;
+
+        int[] isAxisActive = new int[AXIS_COUNT];
 
         void readAxis(int data)
         {
             for (int i = 0; i < AXIS_COUNT; i++)
             {
                 int axis_val = arduPort.ReadByte();
-                Console.Write("A" + i + ": " + axis_val);
+                Console.Write("A" + i + ": " + axis_val + ", ");
+                KeyExecutor executor;
+
+                if (isAxisActive[i] != 0)
+                {
+                    if (axis_val < 0.8 * AXIS_MAX && axis_val > 0.2 * AXIS_MAX)
+                    {
+
+                        if (keyMap.TryGetValue((isAxisActive[i] < 0 ? "-A" : "A") + i, out executor))
+                            executor.keysUp(inSim);
+                        isAxisActive[i] = 0;
+                    }
+                }
+                else
+                {
+                    if (axis_val > 0.8 * AXIS_MAX)
+                    {
+                        if (keyMap.TryGetValue("A" + i, out executor))
+                            executor.keysDown(inSim);
+                        isAxisActive[i] = 1;
+                    }
+                    else if (axis_val < 0.2 * AXIS_MAX)
+                    {
+                        if (keyMap.TryGetValue("-A" + i, out executor))
+                            executor.keysDown(inSim);
+                        isAxisActive[i] = -1;
+                    }
+                }
             }
+            Console.WriteLine();
         }
 
         void readFile()
         {
-            new FileCompiler().readFile(@".\mapping.txt");
-            //string keys = @"(?:\w+\s*\+\s*)*\w+";
-            //string combination = keys + @"\s+,\s+" + keys;
-            //string axis = combination + @"\s+\|\s+" + combination;
-            //string pattern = @"^(A?\d+)\s+-\s+(.*)$";
-            //string keyTerm = "^(?:(" + keys + ")|(" + combination + ")|(" + axis + "))$";
-            //string[] lines = System.IO.File.ReadAllLines(@".\mapping.txt");
-            //foreach (string line in lines)
-            //{
-            //    Console.WriteLine("Line: " + line);
-            //    Match match = Regex.Match(line, pattern, RegexOptions.IgnoreCase);
-            //    if (match.Success)
-            //    {
-            //        int id;
-            //        if (match.Groups[1].Value.StartsWith("A"))
-            //        {
-            //            id = 1000 + Convert.ToInt32(match.Groups[1].Value.Substring(1));
-            //        }
-            //        else
-            //        {
-            //            id = Convert.ToInt32(match.Groups[1].Value);
-            //        }
-            //        Match matchTerm = Regex.Match(match.Groups[2].Value, keyTerm, RegexOptions.IgnoreCase);
-            //        if (match.Success)
-            //        {
-            //            foreach (Group group in matchTerm.Groups)
-            //            {
-            //                Console.WriteLine(group.Value);
-            //            }
-            //        }
-
-                    //List<VirtualKeyCode> keyList = new List<VirtualKeyCode>();
-                    //List<VirtualKeyCode> combinationList = null;
-                    //bool isCombination = false;
-                    //int combinationStart = 0;
-
-                    //for (int i = 2; i < match.Groups.Count; i++)
-                    //{
-                    //    if (match.Groups[i].Value == ",")
-                    //    {
-                    //        isCombination = true;
-                    //        combinationStart = i;
-                    //        break;
-                    //    }
-                    //    if (match.Groups[i].Value != "")
-                    //        keyList.Add((VirtualKeyCode)System.Enum.Parse(typeof(VirtualKeyCode), match.Groups[i].Value, true));
-                    //}
-
-                    //if (isCombination)
-                    //{
-                    //    combinationList = new List<VirtualKeyCode>(keyList);
-                    //    keyList.Clear();
-                    //    for (int i = combinationStart + 1; i < match.Groups.Count; i++)
-                    //    {
-                    //        if (match.Groups[i].Value != "")
-                    //            keyList.Add((VirtualKeyCode)System.Enum.Parse(typeof(VirtualKeyCode), match.Groups[i].Value, true));
-                    //    }
-                    //}
-
-                    //keyMap.Add(id, new KeyCombination(keyList, combinationList, isCombination));
-                    //Console.Write("New Key: " + id + " - ");
-                    //foreach (VirtualKeyCode vk in keyList)
-                    //    Console.Write(vk.ToString() + " ");
-                    //Console.WriteLine();
-            //    }
-            //}
+            keyMap = new FileCompiler().readFile(@".\mapping.txt");
         }
-
-
 
         void setupPort()
         {

@@ -1,1 +1,4 @@
-A0	-	SHIFT , A + D | CONTROL , A + D
+A0	-	A | D
+A1	-	W | S
+53	-	SPACE
+2	-	T

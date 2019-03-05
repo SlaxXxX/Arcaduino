@@ -10,11 +10,8 @@ void setup() {
 }
 
 void loop() {
-//  int xValue = analogRead(A0);
-//  int yValue = analogRead(A1);
-//  Serial.print("X: "); Serial.print(xValue); Serial.print("  ");
-//  Serial.print("Y: "); Serial.print(yValue); Serial.print("  ");
-//  Serial.println("uT");
+  byte xValue = analogRead(A0) >> 2;
+  byte yValue = analogRead(A1) >> 2;
 
   for (byte i=0 ;i<buttonCount; i++) {
     bool button = digitalRead(i);
@@ -24,6 +21,8 @@ void loop() {
       Serial.write(data);
     }
   }
-  
-  delay(100);
+  Serial.write(0b10000000);
+  Serial.write(xValue);
+  Serial.write(yValue);
+  delay(50);
 }
