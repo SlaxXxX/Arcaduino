@@ -1,4 +1,6 @@
-A0	-	A | D
-A1	-	W | S
-53	-	SPACE
-2	-	T
+2	-	LEFT
+3	-	RIGHT
+4	-	UP
+5	-	DOWN
+8	-	RETURN
+9	-	ESCAPE
