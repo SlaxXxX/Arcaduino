@@ -1,7 +1,10 @@
 const int buttonCount = 54;
 bool digButtons[buttonCount];
+byte axis[2];
 
 void setup() {
+  axis[0] = 0;
+  axis[1] = 0;
   Serial.begin(9600);
   for (byte i=0 ;i<buttonCount; i++) {
     pinMode(i, INPUT_PULLUP);
@@ -21,8 +24,13 @@ void loop() {
       Serial.write(data);
     }
   }
-  Serial.write(0b10000000);
-  Serial.write(xValue);
-  Serial.write(yValue);
-  delay(50);
+
+  if (xValue != axis[0] || yValue != axis[1]) {
+    axis[0] = xValue;
+    axis[1] = yValue;
+    Serial.write(0b10000000);
+    Serial.write(xValue);
+    Serial.write(yValue);
+  }
+  delay(20);
 }
