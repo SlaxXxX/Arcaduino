@@ -103,7 +103,7 @@ namespace Arcaduino
         void setupPort()
         {
             arduPort.BaudRate = 9600;
-            arduPort.PortName = "COM7";
+            arduPort.PortName = "COM4";
             arduPort.Open();
         }
 

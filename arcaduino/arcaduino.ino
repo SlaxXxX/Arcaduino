@@ -13,8 +13,8 @@ void setup() {
 }
 
 void loop() {
-  byte xValue = analogRead(A0) >> 2;
-  byte yValue = analogRead(A1) >> 2;
+  byte xValue = 0; //analogRead(A0) >> 2;
+  byte yValue = 0; //analogRead(A1) >> 2;
 
   for (byte i=0 ;i<buttonCount; i++) {
     bool button = digitalRead(i);

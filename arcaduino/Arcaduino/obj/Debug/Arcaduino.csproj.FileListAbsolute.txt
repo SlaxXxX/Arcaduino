@@ -8,3 +8,13 @@ C:\Users\SlaxX\Desktop\Dev\Arcaduino\arcaduino\Arcaduino\obj\Debug\Arcaduino.pdb
 C:\Users\SlaxX\Desktop\Dev\Arcaduino\Arcaduino\Arcaduino\bin\Debug\WindowsInput.dll
 C:\Users\SlaxX\Desktop\Dev\Arcaduino\Arcaduino\Arcaduino\bin\Debug\WindowsInput.xml
 C:\Users\SlaxX\Desktop\Dev\Arcaduino\Arcaduino\Arcaduino\obj\Debug\Arcaduino.csproj.CopyComplete
+C:\dev\cs\Arcaduino\arcaduino\Arcaduino\bin\Debug\Arcaduino.exe.config
+C:\dev\cs\Arcaduino\arcaduino\Arcaduino\bin\Debug\Arcaduino.exe
+C:\dev\cs\Arcaduino\arcaduino\Arcaduino\bin\Debug\Arcaduino.pdb
+C:\dev\cs\Arcaduino\arcaduino\Arcaduino\bin\Debug\WindowsInput.dll
+C:\dev\cs\Arcaduino\arcaduino\Arcaduino\bin\Debug\WindowsInput.xml
+C:\dev\cs\Arcaduino\arcaduino\Arcaduino\obj\Debug\Arcaduino.csprojAssemblyReference.cache
+C:\dev\cs\Arcaduino\arcaduino\Arcaduino\obj\Debug\Arcaduino.csproj.CopyComplete
+C:\dev\cs\Arcaduino\arcaduino\Arcaduino\obj\Debug\Arcaduino.exe
+C:\dev\cs\Arcaduino\arcaduino\Arcaduino\obj\Debug\Arcaduino.pdb
+C:\dev\cs\Arcaduino\arcaduino\Arcaduino\bin\Debug\WindowsInput.pdb
