@@ -5,8 +5,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using System.Diagnostics;
 
-namespace arcademenu
+namespace Arcademenu
 {
     public class Menu : Game
     {
@@ -39,15 +40,24 @@ namespace arcademenu
         {
             inputManager = new InputManager().Initialize();
 
-            games.AddRange(Directory.GetFiles(gamesPath, "*.lnk"));
+            games.AddRange(Directory.GetFiles(gamesPath).Where(name => name.EndsWith(".lnk") || name.EndsWith(".url")));
             if (games.Count < displayedGames)
                 games.AddRange(games.GetRange(0, displayedGames - games.Count));
             games.ForEach(game => gameNames.Add(Path.GetFileNameWithoutExtension(game)));
             foreach (string game in games)
             {
-                FileStream fileStream = new FileStream(game.Replace(".lnk", ".png"), FileMode.Open);
-                gameIcons.Add(Texture2D.FromStream(GraphicsDevice, fileStream));
-                fileStream.Dispose();
+                try
+                {
+                    FileStream fileStream = new FileStream(Path.ChangeExtension(game, ".png"), FileMode.Open);
+                    gameIcons.Add(Texture2D.FromStream(GraphicsDevice, fileStream));
+                    fileStream.Dispose();
+                }
+                catch
+                {
+                    MemoryStream stream = new MemoryStream();
+                    System.Drawing.Icon.ExtractAssociatedIcon(game).ToBitmap().Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
+                    gameIcons.Add(Texture2D.FromStream(GraphicsDevice, stream));
+                }
             }
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -96,6 +106,12 @@ namespace arcademenu
                 scrollDelta += games.Count;
             if (scrollDelta >= games.Count)
                 scrollDelta -= games.Count;
+        }
+
+        public void RunExe()
+        {
+            string path = games[(scrollDelta + activeIndex) % games.Count];
+            Process.Start(path);
         }
     }
 }

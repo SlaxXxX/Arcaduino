@@ -1,9 +1,11 @@
+using Arcademenu;
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using WindowsInput;
 using WindowsInput.Native;
@@ -24,6 +26,7 @@ namespace Arcaduino
         {
             readFile();
             setupPort();
+            new Thread(Start.Main).Start();
             loopSerial();
         }
 

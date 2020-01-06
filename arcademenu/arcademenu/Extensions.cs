@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace arcademenu
+namespace Arcademenu
 {
     public static class Extensions
     {
@@ -18,6 +18,12 @@ namespace arcademenu
         public static float DeltaTime(this GameTime _gameTime)
         {
             return (float)_gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+        public static System.Drawing.Bitmap MakeBmpTransparent(this System.Drawing.Bitmap bmp, System.Drawing.Color color)
+        {
+            bmp.MakeTransparent();
+            return bmp;
         }
     }
 }

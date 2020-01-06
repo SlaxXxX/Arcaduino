@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace arcademenu
+namespace Arcademenu
 {
     class InputManager
     {
-        private readonly HashSet<Keys> usedKeys = new HashSet<Keys> { Keys.Up, Keys.Down };
+        private readonly HashSet<Keys> usedKeys = new HashSet<Keys> { Keys.Up, Keys.Down, Keys.Enter };
         private HashSet<Keys> lastTickKeys;
         private const float minDelay = 0.05f;
         private const float defaultDelay = 0.5f;
@@ -63,6 +63,8 @@ namespace arcademenu
                         direction++;
                         Menu.instance.Scroll(direction);
                         break;
+                    case Keys.Enter:
+                        break;
                     default:
                         throw new Exception("Key \"" + key + "\" is not mapped");
                 }
@@ -80,6 +82,9 @@ namespace arcademenu
                         direction--;
                         currentDelay = defaultDelay;
                         deltaTime = 0;
+                        break;
+                    case Keys.Enter:
+                        Menu.instance.RunExe();
                         break;
                     default:
                         throw new Exception("Key \"" + key + "\" is not mapped");
