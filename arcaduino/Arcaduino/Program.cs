@@ -68,7 +68,7 @@ namespace Arcaduino
             for (int i = 0; i < AXIS_COUNT; i++)
             {
                 int axis_val = arduPort.ReadByte();
-                Console.Write("A" + i + ": " + axis_val + ", ");
+                //Console.Write("A" + i + ": " + axis_val + ", ");
                 KeyExecutor executor;
 
                 if (isAxisActive[i] != 0)
@@ -97,7 +97,7 @@ namespace Arcaduino
                     }
                 }
             }
-            Console.WriteLine();
+            //Console.WriteLine();
         }
 
         void readFile(string file)
