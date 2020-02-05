@@ -63,6 +63,14 @@ namespace Arcademenu
                         direction++;
                         Menu.instance.Scroll(direction);
                         break;
+                    case Keys.Left:
+                        direction--;
+                        Menu.instance.Scroll(direction);
+                        break;
+                    case Keys.Right:
+                        direction++;
+                        Menu.instance.Scroll(direction);
+                        break;
                     case Keys.Enter:
                         break;
                     default:

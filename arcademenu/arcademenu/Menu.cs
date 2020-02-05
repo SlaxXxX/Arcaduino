@@ -112,8 +112,9 @@ namespace Arcademenu
         public void RunExe()
         {
             string path = games[(scrollDelta + activeIndex) % games.Count];
-            Process.Start(path);
             listener.AppRunning(gameNames[(scrollDelta + activeIndex) % games.Count]);
+            Process.Start(path).WaitForExit();
+            listener.AppRunning("default");
         }
     }
 }
