@@ -1,6 +1,7 @@
 using Arcademenu;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ using WindowsInput.Native;
 
 namespace Arcaduino
 {
-    class Program
+    class Program : RunListener
     {
         const int ID_KEY_DOWN = 0;
         const int ID_KEY_UP = 1;
@@ -24,8 +25,9 @@ namespace Arcaduino
 
         Program()
         {
-            readFile();
+            readFile("");
             setupPort();
+            Menu.listener = this;
             new Thread(Start.Main).Start();
             loopSerial();
         }
@@ -98,21 +100,29 @@ namespace Arcaduino
             Console.WriteLine();
         }
 
-        void readFile()
+        void readFile(string file)
         {
-            keyMap = new FileCompiler().readFile(@".\mapping.txt");
+            if (file == "" || !File.Exists(Menu.gamesPath + file + ".keymap"))
+                keyMap = new FileCompiler().readFile(Menu.gamesPath + "default.keymap");
+            else
+                keyMap = new FileCompiler().readFile(Menu.gamesPath + file + ".keymap");
         }
 
         void setupPort()
         {
             arduPort.BaudRate = 9600;
-            arduPort.PortName = "COM4";
+            arduPort.PortName = "COM3";
             arduPort.Open();
         }
 
         static void Main(string[] args)
         {
             new Program();
+        }
+
+        public void AppRunning(string name)
+        {
+            readFile(name);
         }
     }
 }

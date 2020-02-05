@@ -16,9 +16,10 @@ namespace Arcademenu
         private SpriteFont font;
         private InputManager inputManager;
         public static Menu instance;
+        public static RunListener listener;
 
-        private const string basePath = @"C:\dev\cs\Arcaduino";
-        private const string gamesPath = basePath + @"\Games\";
+        public static readonly string basePath = @"C:\Users\Anwender\OneDrive\Dokumente\Arcaduino";
+        public static readonly string gamesPath = basePath + @"\Games\";
         private List<string> games = new List<string>();
         private List<string> gameNames = new List<string>();
         private List<Texture2D> gameIcons = new List<Texture2D>();
@@ -112,6 +113,7 @@ namespace Arcademenu
         {
             string path = games[(scrollDelta + activeIndex) % games.Count];
             Process.Start(path);
+            listener.AppRunning(gameNames[(scrollDelta + activeIndex) % games.Count]);
         }
     }
 }
