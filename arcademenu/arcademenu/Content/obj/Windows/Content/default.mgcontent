@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Arcade/Desktop/Arcaduino/arcademenu/arcademenu/Content/default.spritefont</SourceFile>
-  <SourceTime>2020-02-05T16:46:26.8262449+01:00</SourceTime>
-  <DestFile>C:/Users/Arcade/Desktop/Arcaduino/arcademenu/arcademenu/Content/bin/Windows/Content/default.xnb</DestFile>
-  <DestTime>2020-02-05T16:47:28.7943959+01:00</DestTime>
+  <SourceFile>C:/dev/cs/Arcaduino/arcademenu/arcademenu/Content/default.spritefont</SourceFile>
+  <SourceTime>2020-01-05T15:22:25.1407858+01:00</SourceTime>
+  <DestFile>C:/dev/cs/Arcaduino/arcademenu/arcademenu/Content/bin/Windows/Content/default.xnb</DestFile>
+  <DestTime>2020-03-09T17:48:47.8753148+01:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>

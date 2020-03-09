@@ -18,8 +18,8 @@ namespace Arcademenu
         public static Menu instance;
         public static RunListener listener;
 
-        public static readonly string basePath = @"C:\Users\Arcade\Desktop\Arcaduino";
-        public static readonly string gamesPath = basePath + @"\Games\";
+        public static string basePath;
+        public static string gamesPath;
         private List<string> games = new List<string>();
         private List<string> gameNames = new List<string>();
         private List<Texture2D> gameIcons = new List<Texture2D>();
@@ -37,19 +37,29 @@ namespace Arcademenu
             this.IsFixedTimeStep = true;
             TargetElapsedTime = TimeSpan.FromSeconds(1 / 30f);
         }
+
+        public static string SetPath(string _path)
+        {
+
+            return _path;
+        }
+
+        public void InitMenu(RunListener _listener, string _basePath)
+        {
+            listener = _listener;
+            basePath = _basePath;
+        }
         protected override void Initialize()
         {
             inputManager = new InputManager().Initialize();
 
             games.AddRange(Directory.GetFiles(gamesPath).Where(name => name.EndsWith(".lnk") || name.EndsWith(".url")));
-            if (games.Count < displayedGames)
-                games.AddRange(games.GetRange(0, displayedGames - games.Count));
             games.ForEach(game => gameNames.Add(Path.GetFileNameWithoutExtension(game)));
             foreach (string game in games)
             {
                 try
                 {
-                    FileStream fileStream = new FileStream(Path.ChangeExtension(game, ".png"), FileMode.Open);
+                    FileStream fileStream = new FileStream(Path.ChangeExtension(game, ".jpg"), FileMode.Open);
                     gameIcons.Add(Texture2D.FromStream(GraphicsDevice, fileStream));
                     fileStream.Dispose();
                 }

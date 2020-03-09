@@ -10,10 +10,11 @@ namespace Arcademenu
 {
     class InputManager
     {
-        private readonly HashSet<Keys> usedKeys = new HashSet<Keys> { Keys.Up, Keys.Down, Keys.Enter };
+        private readonly HashSet<Keys> usedKeys = new HashSet<Keys> { Keys.Up, Keys.Down, Keys.Left, Keys.Right, Keys.Enter };
         private HashSet<Keys> lastTickKeys;
         private const float minDelay = 0.05f;
-        private const float defaultDelay = 0.5f;
+        private const float defaultDelay = 0.3f;
+        private const float delayReduction = 0.9f;
         private float currentDelay = defaultDelay;
         private float deltaTime = 0;
         private int direction = 0;
@@ -44,6 +45,18 @@ namespace Arcademenu
 
             //any key left appearently was pressed last tick but not anymore
             lastTickKeys.ForEach(key => Pressed(key, false));
+
+            if (thisTickKeys.Count == 0)
+                currentDelay = defaultDelay;
+
+            if (direction != 0)
+                deltaTime += _gameTime;
+            if (deltaTime > currentDelay)
+            {
+                deltaTime = 0;
+                Menu.instance.Scroll(direction);
+                currentDelay = Math.Max(currentDelay * delayReduction, minDelay);
+            }
 
             //set up all the keys that have been pressed this tick for next tick
             lastTickKeys = thisTickKeys;
@@ -82,12 +95,10 @@ namespace Arcademenu
                 switch (key)
                 {
                     case Keys.Up:
-                        direction++;
-                        currentDelay = defaultDelay;
-                        deltaTime = 0;
-                        break;
                     case Keys.Down:
-                        direction--;
+                    case Keys.Left:
+                    case Keys.Right:
+                        direction = 0;
                         currentDelay = defaultDelay;
                         deltaTime = 0;
                         break;

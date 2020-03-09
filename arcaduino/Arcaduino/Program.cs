@@ -15,6 +15,10 @@ namespace Arcaduino
 {
     class Program : RunListener
     {
+        const bool DEBUG_AT_HOME = true;
+        const string PORT_NAME = DEBUG_AT_HOME ? "COM4" : "COM3";
+        const string BASE_PATH = DEBUG_AT_HOME ? @"C:\dev\cs\Arcaduino" : @"C:\Users\Arcade\Desktop\Arcaduino";
+
         const int ID_KEY_DOWN = 0;
         const int ID_KEY_UP = 1;
         const int ID_AXIS = 2;
@@ -25,9 +29,12 @@ namespace Arcaduino
 
         Program()
         {
+            Menu.listener = this;
+            Menu.basePath = BASE_PATH;
+            Menu.gamesPath = BASE_PATH + @"\Games\";
+
             readFile("");
             setupPort();
-            Menu.listener = this;
             new Thread(Start.Main).Start();
             loopSerial();
         }
@@ -46,7 +53,7 @@ namespace Arcaduino
                 }
                 else
                 {
-                    Console.WriteLine(action + " ,id: " + id);
+                    Console.WriteLine((action == 0 ? "down": "up  ") + " ,id: " + id);
                     KeyExecutor executor;
                     if (action == ID_KEY_DOWN)
                         if (keyMap.TryGetValue("" + id, out executor))
@@ -58,22 +65,26 @@ namespace Arcaduino
             }
         }
 
-        const int AXIS_COUNT = 2;
         const int AXIS_MAX = 225;
-
+        const int AXIS_COUNT = 4;
         int[] isAxisActive = new int[AXIS_COUNT];
 
         void readAxis(int data)
         {
+            int axisCount = (data & 0b11);
+            int axisData = (data & 0b111100) >> 2;
+
             for (int i = 0; i < AXIS_COUNT; i++)
             {
+                if (((data >> (i + 2)) & 1) == 0)
+                    continue;
                 int axis_val = arduPort.ReadByte();
-                //Console.Write("A" + i + ": " + axis_val + ", ");
+                Console.Write("A" + i + ": " + axis_val + ", ");
                 KeyExecutor executor;
 
                 if (isAxisActive[i] != 0)
                 {
-                    if (axis_val < 0.8 * AXIS_MAX && axis_val > 0.2 * AXIS_MAX)
+                    if (axis_val < 0.75 * AXIS_MAX && axis_val > 0.25 * AXIS_MAX)
                     {
 
                         if (keyMap.TryGetValue((isAxisActive[i] < 0 ? "-A" : "A") + i, out executor))
@@ -97,7 +108,7 @@ namespace Arcaduino
                     }
                 }
             }
-            //Console.WriteLine();
+            Console.WriteLine();
         }
 
         void readFile(string file)
@@ -111,7 +122,7 @@ namespace Arcaduino
         void setupPort()
         {
             arduPort.BaudRate = 9600;
-            arduPort.PortName = "COM3";
+            arduPort.PortName = PORT_NAME;
             arduPort.Open();
         }
 

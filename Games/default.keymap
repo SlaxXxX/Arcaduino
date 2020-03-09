@@ -2,9 +2,7 @@
 23	-	RIGHT
 
 27	-	RETURN
-26	-	ESCAPE
 37	-	RETURN
-36	-	ESCAPE
 
 31	-	UP
 28	-	DOWN
@@ -18,3 +16,6 @@
 
 A0	-	LEFT | RIGHT
 A1	-	UP | DOWN
+
+A2	-	LEFT | RIGHT
+A3	-	UP | DOWN
