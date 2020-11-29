@@ -123,8 +123,14 @@ namespace Arcademenu
         {
             string path = games[(scrollDelta + activeIndex) % games.Count];
             listener.AppRunning(gameNames[(scrollDelta + activeIndex) % games.Count]);
-            Process.Start(path).WaitForExit();
-            listener.AppRunning("default");
+            try
+            {
+                Process.Start(path).WaitForExit();
+                listener.AppRunning("default");
+            }
+            catch (Exception e)
+            {
+            }
         }
     }
 }
