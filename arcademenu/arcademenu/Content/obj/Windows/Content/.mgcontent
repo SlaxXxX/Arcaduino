@@ -4,7 +4,7 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/dev/cs/Arcaduino/arcademenu/arcademenu/Content/default.spritefont</File>
+    <File>C:/Users/Anwender/Desktop/Arcaduino/arcademenu/arcademenu/Content/default.spritefont</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

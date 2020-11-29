@@ -331,12 +331,22 @@ namespace Arcaduino
         }
         public override void keysDown(InputSimulator inSim)
         {
-            inSim.Keyboard.KeyDown(key);
+            if (key == VirtualKeyCode.LBUTTON)
+                inSim.Mouse.LeftButtonDown();
+            else if (key == VirtualKeyCode.RBUTTON)
+                inSim.Mouse.RightButtonDown();
+            else
+                inSim.Keyboard.KeyDown(key);
         }
 
         public override void keysUp(InputSimulator inSim)
         {
-            inSim.Keyboard.KeyUp(key);
+            if (key == VirtualKeyCode.LBUTTON)
+                inSim.Mouse.LeftButtonUp();
+            else if (key == VirtualKeyCode.RBUTTON)
+                inSim.Mouse.RightButtonUp();
+            else
+                inSim.Keyboard.KeyUp(key);
         }
     }
 

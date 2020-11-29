@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -15,11 +16,32 @@ namespace Arcaduino
 {
     class Program : RunListener
     {
-        const bool DEBUG_AT_HOME = false;
-        private const bool PRINT_AXIS = true;
+        private class PC_Config
+        {
+            public PC_Config(string _portName, string _basePath)
+            {
+                portName = _portName;
+                basePath = _basePath;
+            }
 
-        const string PORT_NAME = DEBUG_AT_HOME ? "COM4" : "COM3";
-        const string BASE_PATH = DEBUG_AT_HOME ? @"C:\dev\cs\Arcaduino" : @"C:\Users\Arcade\Desktop\Arcaduino";
+            public readonly string portName;
+            public readonly string basePath;
+        }
+        private enum ConfigName
+        {
+            Daheim, Arcade, HeggaLappes
+        }
+
+        private PC_Config[] configs = new PC_Config[] {
+            new PC_Config("COM4",@"C:\dev\cs\Arcaduino"),
+            new PC_Config("COM3",@"C:\Users\Arcade\Desktop\Arcaduino"),
+            new PC_Config("COM5",@"C:\Users\Anwender\Desktop\Arcaduino")
+        };
+
+        private const ConfigName configName = ConfigName.HeggaLappes;
+        private readonly PC_Config config;
+        private const bool PRINT_AXIS = true;
+        private const bool PRINT_BUTTONS = false;
 
         const int ID_KEY_DOWN = 0;
         const int ID_KEY_UP = 1;
@@ -33,9 +55,10 @@ namespace Arcaduino
 
         Program()
         {
+            config = configs[(int)configName];
             Menu.listener = this;
-            Menu.basePath = BASE_PATH;
-            Menu.gamesPath = BASE_PATH + @"\Games\";
+            Menu.basePath = config.basePath;
+            Menu.gamesPath = config.basePath + @"\Games\";
 
             readFile("");
             setupPort();
@@ -57,7 +80,8 @@ namespace Arcaduino
                 }
                 else
                 {
-                    Console.WriteLine((action == 0 ? "down" : "up  ") + " ,id: " + id);
+                    if (PRINT_BUTTONS)
+                        Console.WriteLine((action == 0 ? "down" : "up  ") + " ,id: " + id);
                     KeyExecutor executor;
                     if (action == ID_KEY_DOWN)
                         if (keyMap.TryGetValue("" + id, out executor))
@@ -69,24 +93,40 @@ namespace Arcaduino
             }
         }
 
-        const int AXIS_MAX = 225;
+        //const int AXIS_MAX = 225;
         const int AXIS_COUNT = 4;
-        int[] isAxisActive = new int[AXIS_COUNT];
+        //int[] isAxisActive = new int[AXIS_COUNT];
 
         void readAxis(int data)
         {
-            int axisCount = (data & 0b11);
+            int axisCount = (data & 0b11) + 1;
             int axisData = (data & 0b111100) >> 2;
 
-            for (int i = 0; i < AXIS_COUNT; i++)
+            if (axisCount > AXIS_COUNT)
+                throw new Exception("More than " + AXIS_COUNT + " are not supported.");
+
+            for (int i = 0; i < axisCount; i++)
             {
-                if (((data >> (i + 2)) & 1) == 0)
-                    continue;
+                //if (((data >> (i + 2)) & 1) == 0)
+                //continue;
                 int axis_val = arduPort.ReadByte();
                 if (PRINT_AXIS)
                     Console.Write("A" + i + ": " + axis_val + ", ");
-                KeyExecutor executor;
 
+                int axis_positive = axis_val > 127 ? 1 : -1;
+                axis_val = Math.Max(0, Math.Abs(axis_val - 127) - 5) / 4;
+
+                if (i == 0)
+                {
+                    Move(-axis_positive * axis_val, 0);
+                }
+                else if (i == 1)
+                {
+                    Move(0, axis_positive * axis_val);
+                }
+
+                /* Old code
+                KeyExecutor executor;
                 if (isAxisActive[i] != 0)
                 {
                     if (axis_val < 0.75 * AXIS_MAX && axis_val > 0.25 * AXIS_MAX)
@@ -112,6 +152,7 @@ namespace Arcaduino
                         isAxisActive[i] = -1;
                     }
                 }
+                */
             }
             if (PRINT_AXIS)
                 Console.WriteLine();
@@ -128,7 +169,7 @@ namespace Arcaduino
         void setupPort()
         {
             arduPort.BaudRate = 9600;
-            arduPort.PortName = PORT_NAME;
+            arduPort.PortName = config.portName;
             try
             {
                 arduPort.Open();
@@ -136,7 +177,7 @@ namespace Arcaduino
             }
             catch (Exception)
             {
-                Console.Error.Write("FEHLER BEIM VERBINDEN MIT DEM ARDUINO: KEIN GERÄT GEFUNDEN AUF PORT " + PORT_NAME);
+                Console.Error.Write("FEHLER BEIM VERBINDEN MIT DEM ARDUINO: KEIN GERÄT GEFUNDEN AUF PORT " + config.portName);
             }
         }
 
@@ -148,6 +189,16 @@ namespace Arcaduino
         public void AppRunning(string name)
         {
             readFile(name);
+        }
+
+        [DllImport("user32.dll")]
+        static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
+
+        private const int MOUSEEVENTF_MOVE = 0x0001;
+
+        public static void Move(int xDelta, int yDelta)
+        {
+            mouse_event(MOUSEEVENTF_MOVE, xDelta, yDelta, 0, 0);
         }
     }
 }
